@@ -61,11 +61,11 @@ def parse(url):
     page = get_inventory(api_key=STEAM_API_KEY, user_id=steam_id64).getroot()
     for child in page.findall('./items/'):
         if child.find('id').text == item_id:
-            print('Found it') # gettin' real close boys
+            for index in child.findall('.attributes/attribute'):
+                if index.find('defindex').text == '8':
+                    print(index.find('float_value').text)
 
 
-
-        
 # ------------------ #
 if __name__ == '__main__':
     print('Fetching item wear data...')
