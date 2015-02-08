@@ -26,13 +26,13 @@ def get_steamid64(target_url):
     steam_id64 = ''
 
     try:
-        item_id = url.split('/')[-1][-10:]
+        item_id = url.split('/')[-1][-10:].strip('_') # for 9 and 10 digit item ids
 
-        if url.split('/')[3] == 'id': 
+        if url.split('/')[3] == 'id': # only in links where the user has set a vanity name
             vanity_name = url.split('/')[4]
         else:
             try:
-                steam_id64 = int(url.split('/')[4])
+                steam_id64 = int(url.split('/')[4]) # steam 64 ids are digits only
                 return steam_id64, item_id
             except ValueError as v:
                 print(v, '\nInvalid steamcommunity inventory url')
@@ -42,10 +42,10 @@ def get_steamid64(target_url):
     req = Request('http://steamcommunity.com/id/{0}/?xml=1'.format(vanity_name), headers = HEADERS)
     steamxml = etree.parse(urlopen(req))
     try:
-        steam_id64 = steamxml.find('steamID64').text
+        steam_id64 = steamxml.find('steamID64').text # steam 64 id is stored right near the beginning of the xml
         return steam_id64, item_id
     except:
-        pass
+        pass # need to add an informative error thing here
 
 
 def get_inventory(api_key, user_id):
