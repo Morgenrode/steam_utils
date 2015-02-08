@@ -29,7 +29,7 @@ def get_steamid64(target_url):
         item_id = url.split('/')[-1][-10:]
 
         if url.split('/')[3] == 'id': 
-            vanity_name = url.split('/')[3]
+            vanity_name = url.split('/')[4]
         else:
             try:
                 steam_id64 = int(url.split('/')[4])
