@@ -26,7 +26,7 @@ def get_steamid64(target_url):
     steam_id64 = ''
 
     try:
-        item_id = url.split('/')[-1].split('_')[-1] # grab the last set of digits from the item urtl
+        item_id = url.split('/')[-1].split('_')[-1] # grab the last set of digits from the item url
 
         if url.split('/')[3] == 'id': # only in links where the user has set a vanity name
             vanity_name = url.split('/')[4]
