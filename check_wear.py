@@ -26,7 +26,7 @@ def get_steamid64(target_url):
     steam_id64 = ''
 
     try:
-        item_id = url.split('/')[-1][-10:].strip('_') # for 9 and 10 digit item ids
+        item_id = url.split('/')[-1].split('_')[-1] # grab the last set of digits from the item urtl
 
         if url.split('/')[3] == 'id': # only in links where the user has set a vanity name
             vanity_name = url.split('/')[4]
@@ -45,8 +45,7 @@ def get_steamid64(target_url):
         steam_id64 = steamxml.find('steamID64').text # steam 64 id is stored right near the beginning of the xml
         return steam_id64, item_id
     except:
-        pass # need to add an informative error thing here
-
+        print('Something went really wrong') # Needs better error handling, but this is better than nothing
 
 def get_inventory(api_key, user_id):
     '''Download the specified user's CS:GO inventory page using urllib'''
@@ -57,16 +56,26 @@ def get_inventory(api_key, user_id):
     return webpage
     
 def parse(url):
+    '''Main function: call above helper functions and use xpath to parse out the float_value giving the 
+    specified item's wear condition'''
+
     steam_id64, item_id = get_steamid64(url)
     page = get_inventory(api_key=STEAM_API_KEY, user_id=steam_id64).getroot()
+    get = False
+    # This xpath block here is probably sub-optimal, but it works for now
     for child in page.findall('./items/'):
         if child.find('id').text == item_id:
             for index in child.findall('.attributes/attribute'):
                 if index.find('defindex').text == '8':
                     print(index.find('float_value').text)
+                    get = True
 
+    if not get:
+        print('Item may not exist or doesn\'t seem to have a wear value...')
+                    print('Item doesn\'t seem to have a wear value...')
 
-# ------------------ #
+###----------------------### 
+
 if __name__ == '__main__':
     print('Fetching item wear data...')
     parse(url)
