@@ -72,7 +72,6 @@ def parse(url):
 
     if not get:
         print('Item may not exist or doesn\'t seem to have a wear value...')
-                    print('Item doesn\'t seem to have a wear value...')
 
 ###----------------------### 
 
